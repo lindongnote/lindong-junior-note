@@ -14,7 +14,7 @@ hero:
       text: 贡献指南
       link: /api-examples
   image:
-    src: 'logo-modified.png'
+    src: 'logo.png'
     alt: VitePress
 
 features:
