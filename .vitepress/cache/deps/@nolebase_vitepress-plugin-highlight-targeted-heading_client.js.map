@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "sources": ["../../../node_modules/.pnpm/@nolebase+vitepress-plugin-highlight-targeted-heading@2.12.1_@algolia+client-search@5.20.0_po_dzxwnbxrvenz5t3yjjyhhncdwa/node_modules/@nolebase/vitepress-plugin-highlight-targeted-heading/dist/client/index.mjs"],
+  "sources": ["../../../node_modules/@nolebase/vitepress-plugin-highlight-targeted-heading/dist/client/index.mjs"],
   "sourcesContent": ["import NolebaseHighlightTargetedHeading from \"./components/HighlightTargetedHeading.vue\";\nexport {\n  NolebaseHighlightTargetedHeading\n};\nconst components = {\n  NolebaseHighlightTargetedHeading\n};\nexport const NolebaseNolebaseHighlightTargetedHeadingPlugin = {\n  install(app) {\n    for (const key of Object.keys(components))\n      app.component(key, components[key]);\n  }\n};\n"],
   "mappings": ";AAAA,OAAO,sCAAsC;AAI7C,IAAM,aAAa;AAAA,EACjB;AACF;AACO,IAAM,iDAAiD;AAAA,EAC5D,QAAQ,KAAK;AACX,eAAW,OAAO,OAAO,KAAK,UAAU;AACtC,UAAI,UAAU,KAAK,WAAW,GAAG,CAAC;AAAA,EACtC;AACF;",
   "names": []

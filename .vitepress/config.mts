@@ -23,6 +23,7 @@ export default defineConfig({
   } ,
   title: "霖冬中考笔记",
   description: "初中生的“葵花宝典”",
+  srcDir: "docs",
   
   lang: "zh-CN",
   vite: {
@@ -54,7 +55,7 @@ export default defineConfig({
 
   },
   themeConfig: {
-    logo: './public/logo.png',
+    logo: './favicon.ico',
     search: {
       provider: 'local',
       options: {
@@ -77,7 +78,7 @@ export default defineConfig({
     },
     editLink: {
       text: '在 GitHub 上编辑此页',
-      pattern: 'https://github.com/lindongnote/lindong-junior-note/edit/main/docs/:path'
+      pattern: 'https://github.com/lindongnote/lindong-junior-note/blob/main/docs/:path'
     },
     // 文章翻页
     docFooter: {
