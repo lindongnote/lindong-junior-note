@@ -37,9 +37,9 @@ jobs:
       #     version: 9
       # - uses: oven-sh/setup-bun@v1 # 如果使用 Bun，请取消注释
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: pnpm/action-setup@v3
         with:
-          node-version: 20
+          version: 9
           # Remove the cache option since we don't have a lock file yet
           # cache: npm
       - name: Install dependencies
