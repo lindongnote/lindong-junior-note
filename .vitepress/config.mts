@@ -54,7 +54,7 @@ export default defineConfig({
 
   },
   themeConfig: {
-    logo: '../logo.png',
+    logo: './public/logo.png',
     search: {
       provider: 'local',
       options: {
