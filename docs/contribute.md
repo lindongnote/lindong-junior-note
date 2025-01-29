@@ -6,6 +6,6 @@
 
 ## 联系邮箱
 
-邮箱：lindongnote@163.com
+邮箱：official@ldnote.top
 
 
