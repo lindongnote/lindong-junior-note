@@ -9,7 +9,7 @@ hero:
   actions:  
     - theme: brand
       text: 开始阅读
-      link: /docs/start
+      link: /start
     - theme: alt
       text: 贡献指南
       link: /api-examples
