@@ -12,10 +12,10 @@ hero:
       link: /start
     - theme: alt
       text: 贡献指南
-      link: /api-examples
+      link: /contribute
   image:
-    src: '/favicon.ico'
-    alt: VitePress
+    src: './favicon.ico'
+    alt: Logo
 
 features:
   - icon: 😊

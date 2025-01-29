@@ -1,56 +1,58 @@
 import { defineConfig } from 'vitepress'
-import AutoSidebar from "@iminu/vitepress-plugin-auto-sidebar";
-import { 
-  InlineLinkPreviewElementTransform 
+import {
+  InlineLinkPreviewElementTransform
 } from '@nolebase/vitepress-plugin-inline-link-preview/markdown-it'
-import { 
-  GitChangelog, 
-  GitChangelogMarkdownSection, 
+import {
+  GitChangelog,
+  GitChangelogMarkdownSection,
 } from '@nolebase/vitepress-plugin-git-changelog/vite'
+import nav from './nav.mts';
+
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  
-  markdown: { 
-    config(md) { 
+
+  markdown: {
+    config(md) {
       // 其他 markdown-it 配置...
-      md.use(InlineLinkPreviewElementTransform) ,
-      md.renderer.rules.heading_close = (tokens, idx, options, env, slf) => {
+      md.use(InlineLinkPreviewElementTransform),
+        md.renderer.rules.heading_close = (tokens, idx, options, env, slf) => {
           let htmlResult = slf.renderToken(tokens, idx, options);
-          if (tokens[idx].tag === 'h1') htmlResult += `<ArticleMetadata />`; 
+          if (tokens[idx].tag === 'h1') htmlResult += `<ArticleMetadata />`;
           return htmlResult;
-      }
+        }
     },
-  } ,
+  },
   title: "霖冬中考笔记",
   description: "初中生的“葵花宝典”",
   srcDir: "docs",
   lang: "zh-CN",
   vite: {
     plugins: [
-      AutoSidebar(),
-      GitChangelog({ 
+      nav,
+      GitChangelog({
         // 填写在此处填写您的仓库链接
-        repoURL: () => 'https://github.com/lindongnote/lindong-junior-note', 
-      }), 
-      GitChangelogMarkdownSection(), 
+        repoURL: () => 'https://github.com/lindongnote/lindong-junior-note',
+      }),
+      GitChangelogMarkdownSection(),
     ],
     optimizeDeps: {
-      exclude: [ 
-        '@nolebase/vitepress-plugin-enhanced-readabilities/client', 
-        'vitepress', 
-        '@nolebase/ui', 
-        '@nolebase/vitepress-plugin-inline-link-preview/client', 
-      ], 
+      exclude: [
+        '@nolebase/vitepress-plugin-enhanced-readabilities/client',
+        'vitepress',
+        '@nolebase/ui',
+        '@nolebase/vitepress-plugin-inline-link-preview/client',
+      ],
     },
-    ssr: { 
-      noExternal: [ 
+    ssr: {
+      noExternal: [
         // 如果还有别的依赖需要添加的话，并排填写和配置到这里即可
-        '@nolebase/vitepress-plugin-enhanced-readabilities', 
-        '@nolebase/ui', 
+        '@nolebase/vitepress-plugin-enhanced-readabilities',
+        '@nolebase/ui',
         '@nolebase/vitepress-plugin-inline-link-preview',
-        '@nolebase/vitepress-plugin-highlight-targeted-heading', 
-      ], 
-    }, 
+        '@nolebase/vitepress-plugin-highlight-targeted-heading',
+      ],
+    },
 
   },
   themeConfig: {
@@ -96,20 +98,7 @@ export default defineConfig({
     // 移动端 - 导航栏
     outlineTitle: '在本页',
     // https://vitepress.dev/reference/default-theme-config
-    nav: [
-      { text: '文章', link: '/' },
-      { text: '贡献指南', link: '/api-examples' }
-    ],
 
-    sidebar: [
-      {
-        text: 'Examples',
-        items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
-        ]
-      }
-    ],
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/lindongnote/lindong-junior-note' }
