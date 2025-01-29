@@ -26,7 +26,6 @@ export default defineConfig({
   title: "霖冬中考笔记",
   description: "初中生的“葵花宝典”",
   srcDir: "docs",
-
   lang: "zh-CN",
   vite: {
     plugins: [
@@ -57,7 +56,7 @@ export default defineConfig({
 
   },
   themeConfig: {
-    logo: './favicon.ico',
+    logo: '/favicon.ico',
     search: {
       provider: 'local',
       options: {
