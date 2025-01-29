@@ -11,6 +11,8 @@
     "@nolebase/vitepress-plugin-inline-link-preview": "^2.12.1",
     "@nolebase/vitepress-plugin-page-properties": "^2.12.1",
     "@nolebase/vitepress-plugin-sidebar": "^2.12.1",
+    "vite": "^6.0.11",
+    "vite-plugin-vitepress-auto-nav": "^3.0.0",
     "vitepress": "^1.6.3"
   },
   "dependencies": {

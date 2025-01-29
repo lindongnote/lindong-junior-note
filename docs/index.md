@@ -9,13 +9,13 @@ hero:
   actions:  
     - theme: brand
       text: 开始阅读
-      link: /docs/start
+      link: /start
     - theme: alt
       text: 贡献指南
-      link: /api-examples
+      link: /contribute
   image:
     src: './favicon.ico'
-    alt: VitePress
+    alt: Logo
 
 features:
   - icon: 😊

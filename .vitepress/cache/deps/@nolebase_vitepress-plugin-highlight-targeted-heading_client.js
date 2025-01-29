@@ -1,5 +1,5 @@
-// node_modules/@nolebase/vitepress-plugin-highlight-targeted-heading/dist/client/index.mjs
-import NolebaseHighlightTargetedHeading from "D:/web/lindong-junior-note-3/node_modules/@nolebase/vitepress-plugin-highlight-targeted-heading/dist/client/components/HighlightTargetedHeading.vue";
+// node_modules/.pnpm/@nolebase+vitepress-plugin-_5aeef53238e294c5116e72565951efb9/node_modules/@nolebase/vitepress-plugin-highlight-targeted-heading/dist/client/index.mjs
+import NolebaseHighlightTargetedHeading from "D:/web/lindong-junior-note-3/node_modules/.pnpm/@nolebase+vitepress-plugin-_5aeef53238e294c5116e72565951efb9/node_modules/@nolebase/vitepress-plugin-highlight-targeted-heading/dist/client/components/HighlightTargetedHeading.vue";
 var components = {
   NolebaseHighlightTargetedHeading
 };
