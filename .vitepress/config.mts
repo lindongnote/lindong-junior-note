@@ -11,7 +11,7 @@ import nav from './nav.mts';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-
+  lastUpdated: true,
   markdown: {
     config(md) {
       // 其他 markdown-it 配置...
