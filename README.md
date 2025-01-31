@@ -18,5 +18,5 @@
 
 ## 📞联系
 
-邮箱：[official@ldnote.top](mailto:official@ldnote.top)
+邮箱：[junior@ldnote.top](mailto:official@ldnote.top)
 
