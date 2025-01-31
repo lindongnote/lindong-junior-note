@@ -118,7 +118,7 @@ jobs:
             const previewUrl = process.env.PREVIEW_URL;
             const previewCom = process.env.PREVIEW_COMMENTS;
             
-            const comment = `感谢你的贡献，已经安排相关人员审核！\n🚀 预览部署完成！访问链接: ${previewUrl)}\nLindongNote 不为此预览内容负责！\n${previewCom.replace("{PREVIEW_URL}", previewUrl).replace("\\n", "\n")}`;
+            const comment = `感谢你的贡献，已经安排相关人员审核！\n🚀 预览部署完成！访问链接: ${previewUrl}\nLindongNote 不为此预览内容负责！\n${previewCom.replace("{PREVIEW_URL}", previewUrl).replace("\\n", "\n")}`;
             github.rest.issues.createComment({
               issue_number: prNumber,
               owner: context.repo.owner,
