@@ -97,7 +97,7 @@ jobs:
         if: ${{ env.ONLY_DOCS == 'true' }}
         run: |
           # 使用 Cloudflare API 获取部署状态
-          DEPLOYMENT_STATUS=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_PAGES_ACCOUNT }}/pages/projects/preview-transsoul/deployments" \
+          DEPLOYMENT_STATUS=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_PAGES_ACCOUNT }}/pages/projects/preview-lindong-junior-note/deployments" \
             -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_PAGES_TOKEN }}" \
             -H "Content-Type: application/json")
           
