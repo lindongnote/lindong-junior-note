@@ -77,6 +77,9 @@ export default defineConfig({
         }
       }
     },
+    lastUpdated: {
+      text: '最后更新于',
+    },
     editLink: {
       text: '在 GitHub 上编辑此页',
       pattern: 'https://github.com/lindongnote/lindong-junior-note/blob/main/docs/:path'
