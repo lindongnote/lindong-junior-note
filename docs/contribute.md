@@ -6,6 +6,6 @@
 
 ## 联系邮箱
 
-邮箱：official@ldnote.top
+邮箱：junior@ldnote.top
 
 
