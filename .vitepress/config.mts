@@ -7,6 +7,8 @@ import {
   GitChangelogMarkdownSection,
 } from '@nolebase/vitepress-plugin-git-changelog/vite'
 import nav from './nav.mts';
+import { resolve } from 'path';
+
 
 
 // https://vitepress.dev/reference/site-config
@@ -111,4 +113,9 @@ export default defineConfig({
       copyright: 'Copyright © 2023-present 霖冬笔记'
     }
   },
+  resolve: {
+    alias: {
+      '@theme': resolve(__dirname, '.vitepress/theme')
+    }
+  }
 })
