@@ -15,8 +15,9 @@ const props = defineProps({
   }
 });
 
-// 利用 Vite 的 URL 方法确保音频源正确
-const audio = ref(new Audio(new URL(props.src, import.meta.url).href));
+// 使用动态 URL 处理音频文件路径
+const audioSrc = new URL(props.src, import.meta.url).href;
+const audio = ref(new Audio(audioSrc));
 
 const playAudio = () => {
   console.log('播放音频');
@@ -30,8 +31,8 @@ const playAudio = () => {
 <style scoped>
 .speak-word {
   cursor: pointer;
-  color: rgb(0, 0, 0);
-  background-color: rgba(255, 204, 203, 0.5); /* 背景透明度为0.1 */
+  color: rgb(0,0,0);
+  background-color: rgba(255, 204, 203, 0.5); 
   padding: 5px; /* 增加内边距 */
   border-radius: 5px; /* 圆角效果 */
 }
