@@ -20,7 +20,16 @@ const audioSrc = new URL(props.src, import.meta.url).href;
 const audio = ref(new Audio(audioSrc));
 
 const playAudio = () => {
-  console.log('播放音频');
+  console.log('准备播放音频:', audio.value.src);
+  
+  // 验证音频源的有效性
+  if (!props.src) {
+    console.error('音频源未定义');
+    console.error(props);
+    console.error(props.src);
+    return;
+  }
+
   audio.value.currentTime = 0; // 重置音频时间
   audio.value.play().catch(error => {
     console.error('音频播放失败:', error);
@@ -31,8 +40,8 @@ const playAudio = () => {
 <style scoped>
 .speak-word {
   cursor: pointer;
-  color: rgb(0,0,0);
-  background-color: rgba(255, 204, 203, 0.5); 
+  color: rgb(255, 255, 0);
+  background-color: rgba(255, 204, 203, 0.1); /* 背景透明度为0.1 */
   padding: 5px; /* 增加内边距 */
   border-radius: 5px; /* 圆角效果 */
 }
