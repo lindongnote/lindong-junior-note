@@ -16,17 +16,16 @@ const props = defineProps({
 });
 
 // 使用动态 URL 处理音频文件路径
-import aUrl from props.src
+const aUrl = new URL(props.src, import.meta.url).href;
 const audio = ref(new Audio(aUrl));
 
 const playAudio = () => {
-  console.log('准备播放音频:', aUrl.src);
+  console.log('准备播放音频:', aUrl);
   
   // 验证音频源的有效性
   if (!props.src) {
     console.error('音频源未定义');
     console.error(props);
-    console.error(props.src);
     return;
   }
 
