@@ -4,7 +4,7 @@ title: Page 1
 
 ---
 
-## Section A - Page 1
+# Section A - Page 1
 
 #### 欢迎来到 Section A!
 
@@ -26,48 +26,46 @@ greet /ɡriːt/ <button onclick="new Audio('./assets/audio/greet.mp3').play()">�
 
 ::: details greet 的用法
 
-译自 <a href="https://www.oxfordlearnersdictionaries.com/definition/english/greet?q=greet">牛津词典</a>
+译自 <a href="https://www.oxfordlearnersdictionaries.com/definition/english/greet?q=greet">牛津词典</a>，例句录音在例句下方。
 
-1.
-~ sb (with sth)
+1. 和（某人）打招呼（或问好）；欢迎；迎接
 
-和（某人）打招呼（或问好）；欢迎；迎接
+例句 1：He **greeted** all the guests warmly as they arrived. 
 
-to say hello to sb or to welcome them
-
-例句：He **greeted** all the guests warmly as they arrived. <button onclick="new Audio('./assets/audio/greet-sen1.mp3').play()">播放录音</button>
 客人到达时他都热情接待。
 
-She **greeted** us with a smile. <button onclick="new Audio('./assets/audio/greet-sen2.mp3').play()">播放录音</button>
+<div><audio src="./assets/audio/greet-sen1.mp3" class="col-xs-12 col-sm-12 col-md-6 col-lg-6" controls=""></audio></div>
+
+例句 2：She **greeted** us with a smile.
+
 她微笑着向我们打招呼。
 
-see also meet-and-greet
+<div><audio src="./assets/audio/greet-sen2.mp3" class="col-xs-12 col-sm-12 col-md-6 col-lg-6" controls=""></audio></div>
 
-2.
-[usually passive] ~ sb/sth (with/as sth)
-
-（以某种方式）对…作出反应
-
-to react to sb/sth in a particular way
+2. （以某种方式）对…作出反应
 
 <!-- 
 
-The team's win was **greeted** as a major triumph.<button onclick="new Audio('./assets/audio/greet-sen3.mp3').play()">播放录音</button>
+The team's win was **greeted** as a major triumph. <button onclick="new Audio('./assets/audio/greet-sen3.mp3').play()"> 播放录音</button>
 这个队获胜被看成是一个重大的胜利。
 
 -->
 
-Loud cheers **greeted** the news.<button onclick="new Audio('./assets/audio/greet-sen4.mp3').play()">播放录音</button>
+例句：Loud cheers **greeted** the news. 
+
 这消息受到热烈欢呼。
 
-3.
-[usually passive] of sights, sounds or smells 景象、声音或气味映入…的眼帘；传入…的耳中（或鼻中）
+<div><audio src="./assets/audio/greet-sen4.mp3" class="col-xs-12 col-sm-12 col-md-6 col-lg-6" controls=""></audio></div>
 
-to be the first thing that you see, hear or smell at a particular time
+3. [usually passive] of sights, sounds or smells 景象、声音或气味映入…的眼帘；传入…的耳中（或鼻中）
 
-When she opened the door she was **greeted** by a scene of utter confusion. <button onclick="new Audio('./assets/audio/greet-sen5.mp3').play()">播放录音</button>
+例句：When she opened the door she was **greeted** by a scene of utter confusion. 
 
 她开开门，一片混乱不堪的景象呈现在她的眼前。
+
+<div><audio src="./assets/audio/greet-sen5.mp3" class="col-xs-12 col-sm-12 col-md-6 col-lg-6" controls=""></audio></div>
+
+
 
 :::
 
