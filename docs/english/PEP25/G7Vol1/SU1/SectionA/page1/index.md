@@ -16,13 +16,13 @@ section /ˈsekʃn/ <button onclick="new Audio('./assets/audio/section.mp3').play
 
 这个单词用在 "Section A" 这种地方意为 **“部分”** 的意思，例如 "Section A" 的意思就是 **“A 部分”**
 
-让我们先看看 Section A 的**标题**：**“How do you greet people?”**，意为**“你怎样问候他人？”** 
+让我们先看看 Section A 的**标题**：**“How do you greet people?”**，意为 **“你怎样问候他人？”** 
 
 看到标题我们能知道 —— 这一部分是学习**如何问候他人**的。
 
 这个标题中有些生词，让我们一起来学习一下。
 
-greet /ɡriːt/ <button onclick="new Audio('./assets/audio/greet.mp3').play()">播放录音</button> v. 招呼；问候
+greet /ɡriːt/ <button onclick="this.disabled=true;const audio=new Audio('./assets/audio/greet.mp3?url');audio.onended=()=>this.disabled=false;audio.play()">播放录音</button> v. 招呼；问候
 
 ::: details greet 的用法
 

@@ -16,17 +16,11 @@ title: Page 3
 
 流程：A 说字母，B 指出字母所在位置并说出 "字母 is here."
 
-::: details 习题答案
-
-实践性习题，无答案。
-
-:::
-
 #### 活动 2
 
 <div><audio src="https://www.pep.com.cn/yyszptzy/7s-05-Starter-Unit-1-Pronunciation-2.mp3" class="col-xs-12 col-sm-12 col-md-6 col-lg-6" controls=""></audio></div>
 
-听录音，跟读字母。
+听录音，跟读字母。熟悉字母所属的音标。
 
 #### 活动 3
 
@@ -34,7 +28,7 @@ title: Page 3
 
 听字母。找出对应图片的编号填入横线。
 
-::: details 答案
+::: details 习题答案
 
 B; E; A; C; D.
 
