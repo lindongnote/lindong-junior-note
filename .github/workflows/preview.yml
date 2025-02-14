@@ -34,8 +34,9 @@ jobs:
           PREVIEW_COMMENTS=""
           if [[ -n "$MD_FILES" ]]; then
             for file in $MD_FILES; do
-              FILENAME=$(basename "$file" .md)
-              PREVIEW_COMMENTS+="访问链接: \${PREVIEW_URL}/${FILENAME}.html\n"
+              # 保持原始路径结构，只替换 .md 为 .html
+              HTML_PATH=${file%.md}.html
+              PREVIEW_COMMENTS+="访问链接: \${PREVIEW_URL}/${HTML_PATH}\n"
             done
             echo "PREVIEW_COMMENTS=${PREVIEW_COMMENTS}" >> $GITHUB_ENV
           fi
