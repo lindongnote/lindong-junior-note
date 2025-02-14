@@ -35,14 +35,15 @@ jobs:
           if [[ -n "$MD_FILES" ]]; then
             for file in $MD_FILES; do
               FILENAME=$(basename "$file" .md)
-              PREVIEW_COMMENTS+="访问链接: {PREVIEW_URL}/${FILENAME}.html"
+              PREVIEW_COMMENTS+="访问链接: {PREVIEW_URL}/${FILENAME}.html\n"
             done
             echo "PREVIEW_COMMENTS=${PREVIEW_COMMENTS}" >> $GITHUB_ENV
           fi
           echo "Changed files:"
           echo "$CHANGED_FILES"
-          if [[ "$CHANGED_FILES" == *"docs"* || "$CHANGED_FILES" == "" ]]; then
-            echo "Only 'docs' folder or no changes."
+          # 使用更精确的目录检查
+          if echo "$CHANGED_FILES" | grep -q "^docs/"; then
+            echo "Only 'docs' folder changes detected."
             echo "ONLY_DOCS=true" >> $GITHUB_ENV
           else
             echo "Changes outside 'docs' folder detected."
@@ -115,10 +116,21 @@ jobs:
           github-token: ${{ steps.auth.outputs.token }}
           script: |
             const prNumber = context.payload.pull_request.number;
-            const previewUrl = process.env.PREVIEW_URL;
-            const previewCom = process.env.PREVIEW_COMMENTS;
+            const previewUrl = process.env.PREVIEW_URL || '部署失败，未获取到预览链接';
+            const previewCom = process.env.PREVIEW_COMMENTS || '';
             
-            const comment = `感谢你的贡献，已经安排相关人员审核！\n🚀 预览部署完成！访问链接: ${previewUrl}\nLindongNote 不为此预览内容负责！\n${previewCom.replace("{PREVIEW_URL}", previewUrl).replace("\n", `\n`)}`;
+            let modifiedFilesSection = '';
+            if (previewCom) {
+              modifiedFilesSection = `\n修改文件预览链接:\n${previewCom.split('\n').filter(Boolean).join('\n')}`;
+            }
+            
+            const comment = `感谢你的贡献，已经安排相关人员审核！
+
+            🚀 预览部署完成！
+            主页预览链接: ${previewUrl}${modifiedFilesSection}
+
+            ⚠️ LindongNote 不为此预览内容负责！`;
+            
             github.rest.issues.createComment({
               issue_number: prNumber,
               owner: context.repo.owner,
