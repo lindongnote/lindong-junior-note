@@ -30,12 +30,12 @@ jobs:
         id: check-changes
         run: |
           CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
-          MD_FILES=$(echo "$CHANGED_FILES" | grep '\.md$')
+          MD_FILES=$(echo "$CHANGED_FILES" | grep '\.md$' || true)
           PREVIEW_COMMENTS=""
           if [[ -n "$MD_FILES" ]]; then
             for file in $MD_FILES; do
               FILENAME=$(basename "$file" .md)
-              PREVIEW_COMMENTS+="访问链接: {PREVIEW_URL}/${FILENAME}.html\n"
+              PREVIEW_COMMENTS+="访问链接: \${PREVIEW_URL}/${FILENAME}.html\n"
             done
             echo "PREVIEW_COMMENTS=${PREVIEW_COMMENTS}" >> $GITHUB_ENV
           fi
@@ -117,11 +117,11 @@ jobs:
           script: |
             const prNumber = context.payload.pull_request.number;
             const previewUrl = process.env.PREVIEW_URL || '部署失败，未获取到预览链接';
-            const previewCom = process.env.PREVIEW_COMMENTS || '';
+            const previewCom = (process.env.PREVIEW_COMMENTS || '').replace(/\${PREVIEW_URL}/g, previewUrl);
             
             let modifiedFilesSection = '';
             if (previewCom) {
-              modifiedFilesSection = `\n修改文件预览链接:\n${previewCom.split('\n').filter(Boolean).join('\n')}`;
+              modifiedFilesSection = `\n\n修改文件预览链接:\n${previewCom.split('\\n').filter(Boolean).join('\n')}`;
             }
             
             const comment = `感谢你的贡献，已经安排相关人员审核！
