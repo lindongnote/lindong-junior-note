@@ -30,23 +30,36 @@ jobs:
         id: check-changes
         run: |
           CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
+          # 检查是否有文件重命名、删除或添加操作
+          FILE_STATUS=$(git diff --name-status origin/${{ github.event.pull_request.base.ref }}...HEAD)
+          RENAME_DELETE_ADD=$(echo "$FILE_STATUS" | grep -E '^[RDA]' || true)
+          
           MD_FILES=$(echo "$CHANGED_FILES" | grep '\.md$' || true)
           PREVIEW_COMMENTS=""
           if [[ -n "$MD_FILES" ]]; then
             for file in $MD_FILES; do
-              # 移除 docs/ 前缀并替换 .md 为 .html
               HTML_PATH=${file#docs/}
               HTML_PATH=${HTML_PATH%.md}.html
               PREVIEW_COMMENTS+="访问链接: \${PREVIEW_URL}/${HTML_PATH}\n"
             done
             echo "PREVIEW_COMMENTS=${PREVIEW_COMMENTS}" >> $GITHUB_ENV
           fi
+          
           echo "Changed files:"
           echo "$CHANGED_FILES"
-          # 使用更精确的目录检查
+          
+          # 检查是否只修改了 docs 目录下的文件
           if echo "$CHANGED_FILES" | grep -q "^docs/"; then
             echo "Only 'docs' folder changes detected."
             echo "ONLY_DOCS=true" >> $GITHUB_ENV
+            # 如果有重命名、删除或添加操作，设置需要评论
+            if [[ -n "$RENAME_DELETE_ADD" ]]; then
+              echo "Found rename/delete/add operations."
+              echo "NEED_COMMENT=true" >> $GITHUB_ENV
+            else
+              echo "No rename/delete/add operations."
+              echo "NEED_COMMENT=false" >> $GITHUB_ENV
+            fi
           else
             echo "Changes outside 'docs' folder detected."
             echo "ONLY_DOCS=false" >> $GITHUB_ENV
@@ -112,7 +125,7 @@ jobs:
           echo "PREVIEW_URL=$PREVIEW_URL" >> $GITHUB_ENV
 
       - name: 评论 PR 预览链接
-        if: ${{ env.ONLY_DOCS == 'true' }}
+        if: ${{ env.ONLY_DOCS == 'true' && env.NEED_COMMENT == 'true' }}
         uses: actions/github-script@v6
         with:
           github-token: ${{ steps.auth.outputs.token }}
