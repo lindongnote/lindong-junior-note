@@ -29,50 +29,24 @@ jobs:
       - name: 检查修改部分
         id: check-changes
         run: |
-          # 检查是否是首次推送
-          IS_FIRST_PUSH=$(if [[ "${{ github.event.action }}" == "opened" ]]; then echo "true"; else echo "false"; fi)
-          
           CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
-          # 检查是否有文件重命名、删除或添加操作
-          FILE_STATUS=$(git diff --name-status origin/${{ github.event.pull_request.base.ref }}...HEAD)
-          
-          echo "File status:"
-          echo "$FILE_STATUS"
-          
-          # 直接检查 docs/ 目录下的文件变更类型
-          DOCS_OPERATIONS=$(echo "$FILE_STATUS" | grep -E "^[RDA]\s+docs/" || true)
-          
-          echo "Docs operations:"
-          echo "$DOCS_OPERATIONS"
-          
-          # 获取修改的 md 文件列表
-          MD_FILES=$(echo "$CHANGED_FILES" | grep '^docs/.*\.md$' || true)
-          PREVIEW_LINKS=""
+          MD_FILES=$(echo "$CHANGED_FILES" | grep '\.md$' || true)
+          PREVIEW_COMMENTS=""
           if [[ -n "$MD_FILES" ]]; then
             for file in $MD_FILES; do
+              # 移除 docs/ 前缀并替换 .md 为 .html
               HTML_PATH=${file#docs/}
               HTML_PATH=${HTML_PATH%.md}.html
-              PREVIEW_LINKS+="访问链接: \${PREVIEW_URL}/${HTML_PATH}\n"
+              PREVIEW_COMMENTS+="访问链接: \${PREVIEW_URL}/${HTML_PATH}\n"
             done
-            echo "PREVIEW_LINKS=${PREVIEW_LINKS}" >> $GITHUB_ENV
+            echo "PREVIEW_COMMENTS=${PREVIEW_COMMENTS}" >> $GITHUB_ENV
           fi
-          
-          # 检查是否只修改了 docs 目录下的文件
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+          # 使用更精确的目录检查
           if echo "$CHANGED_FILES" | grep -q "^docs/"; then
             echo "Only 'docs' folder changes detected."
             echo "ONLY_DOCS=true" >> $GITHUB_ENV
-            
-            # 决定是否需要评论
-            if [[ "$IS_FIRST_PUSH" == "true" ]]; then
-              echo "First push, will comment with all links"
-              echo "NEED_COMMENT=true" >> $GITHUB_ENV
-            elif [[ -n "$DOCS_OPERATIONS" ]]; then
-              echo "Found file operations in docs/, will comment"
-              echo "NEED_COMMENT=true" >> $GITHUB_ENV
-            else
-              echo "Regular content update, skipping comment"
-              echo "NEED_COMMENT=false" >> $GITHUB_ENV
-            fi
           else
             echo "Changes outside 'docs' folder detected."
             echo "ONLY_DOCS=false" >> $GITHUB_ENV
@@ -99,10 +73,11 @@ jobs:
               state: 'closed',
             });
       - name: 安装 node
-        if: ${{ env.ONLY_DOCS == 'true' }}
         uses: pnpm/action-setup@v3
         with:
           version: 9
+          # Remove the cache option since we don't have a lock file yet
+          # cache: npm
 
       - name: 安装支持库
         if: ${{ env.ONLY_DOCS == 'true' }}
@@ -137,18 +112,18 @@ jobs:
           echo "PREVIEW_URL=$PREVIEW_URL" >> $GITHUB_ENV
 
       - name: 评论 PR 预览链接
-        if: ${{ env.ONLY_DOCS == 'true' && env.NEED_COMMENT == 'true' }}
+        if: ${{ env.ONLY_DOCS == 'true' }}
         uses: actions/github-script@v6
         with:
           github-token: ${{ steps.auth.outputs.token }}
           script: |
             const prNumber = context.payload.pull_request.number;
             const previewUrl = process.env.PREVIEW_URL || '部署失败，未获取到预览链接';
-            const previewLinks = process.env.PREVIEW_LINKS || '';
+            const previewCom = (process.env.PREVIEW_COMMENTS || '').replace(/\${PREVIEW_URL}/g, previewUrl);
             
             let modifiedFilesSection = '';
-            if (previewLinks) {
-              modifiedFilesSection = `\n\n修改文件预览链接:\n${previewLinks.split('\\n').filter(Boolean).join('\n').replace(/\${PREVIEW_URL}/g, previewUrl)}`;
+            if (previewCom) {
+              modifiedFilesSection = `\n\n修改文件预览链接:\n${previewCom.split('\\n').filter(Boolean).join('\n')}`;
             }
             
             const comment = `感谢你的贡献，已经安排相关人员审核！
@@ -157,10 +132,34 @@ jobs:
             主页预览链接: ${previewUrl}${modifiedFilesSection}
 
             ⚠️ LindongNote 不为此预览内容负责！`;
-            
-            github.rest.issues.createComment({
+
+            // 获取现有评论
+            const { data: comments } = await github.rest.issues.listComments({
               issue_number: prNumber,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: comment,
             });
+
+            // 查找机器人的预览评论
+            const botComment = comments.find(c => 
+              c.user.type === 'Bot' && 
+              c.body.includes('预览部署完成！')
+            );
+
+            if (botComment) {
+              // 更新现有评论
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment,
+              });
+            } else {
+              // 如果没有找到现有评论，创建新评论
+              await github.rest.issues.createComment({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment,
+              });
+            }
