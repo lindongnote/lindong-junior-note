@@ -32,12 +32,6 @@ jobs:
           # 检查是否是首次推送
           IS_FIRST_PUSH=$(if [[ "${{ github.event.action }}" == "opened" ]]; then echo "true"; else echo "false"; fi)
           
-          if [[ "$IS_FIRST_PUSH" == "false" ]]; then
-            echo "Subsequent push, skipping preview."
-            echo "SKIP_PREVIEW=true" >> $GITHUB_ENV
-            exit 0
-          fi
-          
           CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
           # 检查是否有文件重命名、删除或添加操作
           FILE_STATUS=$(git diff --name-status origin/${{ github.event.pull_request.base.ref }}...HEAD)
@@ -62,12 +56,12 @@ jobs:
           if echo "$CHANGED_FILES" | grep -q "^docs/"; then
             echo "Only 'docs' folder changes detected."
             echo "ONLY_DOCS=true" >> $GITHUB_ENV
-            # 如果是首次推送或有 docs 目录下的文件操作，设置需要评论
+            # 如果是首次推送或有文件操作，设置需要评论
             if [[ "$IS_FIRST_PUSH" == "true" ]] || [[ -n "$RENAME_DELETE_ADD" ]]; then
-              echo "First push or found docs/ folder operations."
+              echo "First push or found file operations in docs/, will comment."
               echo "NEED_COMMENT=true" >> $GITHUB_ENV
             else
-              echo "Not first push and no docs/ folder operations."
+              echo "Not first push and no file operations, skipping comment."
               echo "NEED_COMMENT=false" >> $GITHUB_ENV
             fi
           else
