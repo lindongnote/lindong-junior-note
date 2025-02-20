@@ -94,17 +94,17 @@ jobs:
               state: 'closed',
             });
       - name: 安装 node
-        if: ${{ env.SKIP_PREVIEW != 'true' && env.ONLY_DOCS == 'true' }}
+        if: ${{ env.ONLY_DOCS == 'true' }}
         uses: pnpm/action-setup@v3
         with:
           version: 9
 
       - name: 安装支持库
-        if: ${{ env.SKIP_PREVIEW != 'true' && env.ONLY_DOCS == 'true' }}
+        if: ${{ env.ONLY_DOCS == 'true' }}
         run: pnpm install --frozen-lockfile
 
       - name: 构建页面
-        if: ${{ env.SKIP_PREVIEW != 'true' && env.ONLY_DOCS == 'true' }}
+        if: ${{ env.ONLY_DOCS == 'true' }}
         run: pnpm run docs:build
 
       - name: 上传到 Cloudflare Pages
