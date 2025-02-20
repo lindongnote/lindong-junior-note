@@ -35,8 +35,17 @@ jobs:
           CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
           # 检查是否有文件重命名、删除或添加操作
           FILE_STATUS=$(git diff --name-status origin/${{ github.event.pull_request.base.ref }}...HEAD)
-          # 只检查 docs/ 目录下的文件操作
-          RENAME_DELETE_ADD=$(echo "$FILE_STATUS" | grep -E '^[RDA].*docs/' || true)
+          echo "File status:"
+          echo "$FILE_STATUS"
+          
+          # 修改检查逻辑，先过滤 docs/ 目录，再检查操作类型
+          DOCS_CHANGES=$(echo "$FILE_STATUS" | grep "^.*docs/" || true)
+          RENAME_DELETE_ADD=$(echo "$DOCS_CHANGES" | grep -E "^[RDA]" || true)
+          
+          echo "Docs changes:"
+          echo "$DOCS_CHANGES"
+          echo "File operations:"
+          echo "$RENAME_DELETE_ADD"
           
           MD_FILES=$(echo "$CHANGED_FILES" | grep '\.md$' || true)
           PREVIEW_COMMENTS=""
