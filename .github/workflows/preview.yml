@@ -35,51 +35,38 @@ jobs:
           CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
           # 检查是否有文件重命名、删除或添加操作
           FILE_STATUS=$(git diff --name-status origin/${{ github.event.pull_request.base.ref }}...HEAD)
-          echo "File status:"
-          echo "$FILE_STATUS"
           
-          # 修改检查逻辑，先过滤 docs/ 目录，再检查操作类型
+          # 检查 docs/ 目录下的文件操作
           DOCS_CHANGES=$(echo "$FILE_STATUS" | grep "^.*docs/" || true)
           RENAME_DELETE_ADD=$(echo "$DOCS_CHANGES" | grep -E "^[RDA]" || true)
           
-          echo "Docs changes:"
-          echo "$DOCS_CHANGES"
-          echo "File operations:"
-          echo "$RENAME_DELETE_ADD"
-          
+          # 获取修改的 md 文件列表
           MD_FILES=$(echo "$CHANGED_FILES" | grep '^docs/.*\.md$' || true)
-          PREVIEW_COMMENTS=""
+          PREVIEW_LINKS=""
           if [[ -n "$MD_FILES" ]]; then
             for file in $MD_FILES; do
-              if [[ "$file" == docs/* ]]; then
-                HTML_PATH=${file#docs/}
-                HTML_PATH=${HTML_PATH%.md}.html
-                if [[ "$IS_FIRST_PUSH" == "true" ]] || [[ -n "$RENAME_DELETE_ADD" ]]; then
-                  PREVIEW_COMMENTS+="访问链接: \${PREVIEW_URL}/${HTML_PATH}\n"
-                fi
-                # 始终记录最新修改的文件
-                echo "LATEST_PREVIEW=${HTML_PATH}" >> $GITHUB_ENV
-              fi
+              HTML_PATH=${file#docs/}
+              HTML_PATH=${HTML_PATH%.md}.html
+              PREVIEW_LINKS+="访问链接: \${PREVIEW_URL}/${HTML_PATH}\n"
             done
-            if [[ -n "$PREVIEW_COMMENTS" ]]; then
-              echo "PREVIEW_COMMENTS=${PREVIEW_COMMENTS}" >> $GITHUB_ENV
-            fi
+            echo "PREVIEW_LINKS=${PREVIEW_LINKS}" >> $GITHUB_ENV
           fi
-          
-          echo "Changed files:"
-          echo "$CHANGED_FILES"
           
           # 检查是否只修改了 docs 目录下的文件
           if echo "$CHANGED_FILES" | grep -q "^docs/"; then
             echo "Only 'docs' folder changes detected."
             echo "ONLY_DOCS=true" >> $GITHUB_ENV
-            # 如果不是首次推送且没有文件操作，跳过评论
-            if [[ "$IS_FIRST_PUSH" == "false" ]] && [[ -z "$RENAME_DELETE_ADD" ]]; then
-              echo "Not first push and no file operations, skipping comment."
-              echo "SKIP_COMMENT=true" >> $GITHUB_ENV
+            
+            # 决定是否需要评论
+            if [[ "$IS_FIRST_PUSH" == "true" ]]; then
+              echo "First push, will comment with all links"
+              echo "NEED_COMMENT=true" >> $GITHUB_ENV
+            elif [[ -n "$RENAME_DELETE_ADD" ]]; then
+              echo "Found file operations, will comment with all links"
+              echo "NEED_COMMENT=true" >> $GITHUB_ENV
             else
-              echo "First push or found file operations, will comment."
-              echo "SKIP_COMMENT=false" >> $GITHUB_ENV
+              echo "Regular content update, skipping comment"
+              echo "NEED_COMMENT=false" >> $GITHUB_ENV
             fi
           else
             echo "Changes outside 'docs' folder detected."
@@ -145,21 +132,18 @@ jobs:
           echo "PREVIEW_URL=$PREVIEW_URL" >> $GITHUB_ENV
 
       - name: 评论 PR 预览链接
-        if: ${{ env.ONLY_DOCS == 'true' && env.SKIP_COMMENT != 'true' }}
+        if: ${{ env.ONLY_DOCS == 'true' && env.NEED_COMMENT == 'true' }}
         uses: actions/github-script@v6
         with:
           github-token: ${{ steps.auth.outputs.token }}
           script: |
             const prNumber = context.payload.pull_request.number;
             const previewUrl = process.env.PREVIEW_URL || '部署失败，未获取到预览链接';
-            const previewCom = (process.env.PREVIEW_COMMENTS || '').replace(/\${PREVIEW_URL}/g, previewUrl);
-            const latestPreview = process.env.LATEST_PREVIEW;
+            const previewLinks = process.env.PREVIEW_LINKS || '';
             
             let modifiedFilesSection = '';
-            if (previewCom) {
-              modifiedFilesSection = `\n\n修改文件预览链接:\n${previewCom.split('\\n').filter(Boolean).join('\n')}`;
-            } else if (latestPreview) {
-              modifiedFilesSection = `\n\n最新修改文件预览链接:\n访问链接: ${previewUrl}/${latestPreview}`;
+            if (previewLinks) {
+              modifiedFilesSection = `\n\n修改文件预览链接:\n${previewLinks.split('\\n').filter(Boolean).join('\n').replace(/\${PREVIEW_URL}/g, previewUrl)}`;
             }
             
             const comment = `感谢你的贡献，已经安排相关人员审核！
