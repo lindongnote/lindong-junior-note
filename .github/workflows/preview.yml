@@ -56,13 +56,13 @@ jobs:
           if echo "$CHANGED_FILES" | grep -q "^docs/"; then
             echo "Only 'docs' folder changes detected."
             echo "ONLY_DOCS=true" >> $GITHUB_ENV
-            # 如果是首次推送或有文件操作，设置需要评论
-            if [[ "$IS_FIRST_PUSH" == "true" ]] || [[ -n "$RENAME_DELETE_ADD" ]]; then
-              echo "First push or found file operations in docs/, will comment."
-              echo "NEED_COMMENT=true" >> $GITHUB_ENV
-            else
+            # 如果不是首次推送且没有文件操作，跳过评论
+            if [[ "$IS_FIRST_PUSH" == "false" ]] && [[ -z "$RENAME_DELETE_ADD" ]]; then
               echo "Not first push and no file operations, skipping comment."
-              echo "NEED_COMMENT=false" >> $GITHUB_ENV
+              echo "SKIP_COMMENT=true" >> $GITHUB_ENV
+            else
+              echo "First push or found file operations, will comment."
+              echo "SKIP_COMMENT=false" >> $GITHUB_ENV
             fi
           else
             echo "Changes outside 'docs' folder detected."
