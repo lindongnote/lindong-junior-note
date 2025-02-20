@@ -39,7 +39,7 @@ const playAudio = () => {
 <style scoped>
 .speak-word {
   cursor: pointer;
-  color: rgb(255, 255, 0);
+  color: #F59CB6;
   background-color: rgba(255, 204, 203, 0.1); /* 背景透明度为0.1 */
   padding: 5px; /* 增加内边距 */
   border-radius: 5px; /* 圆角效果 */
