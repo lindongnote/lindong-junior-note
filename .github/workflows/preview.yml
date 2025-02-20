@@ -29,10 +29,16 @@ jobs:
       - name: 检查修改部分
         id: check-changes
         run: |
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
-          # 检查是否是首次推送或有文件操作
+          # 检查是否是首次推送
           IS_FIRST_PUSH=$(if [[ "${{ github.event.action }}" == "opened" ]]; then echo "true"; else echo "false"; fi)
           
+          if [[ "$IS_FIRST_PUSH" == "false" ]]; then
+            echo "Subsequent push, skipping preview."
+            echo "SKIP_PREVIEW=true" >> $GITHUB_ENV
+            exit 0
+          fi
+          
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
           # 检查是否有文件重命名、删除或添加操作
           FILE_STATUS=$(git diff --name-status origin/${{ github.event.pull_request.base.ref }}...HEAD)
           # 只检查 docs/ 目录下的文件操作
@@ -90,18 +96,17 @@ jobs:
               state: 'closed',
             });
       - name: 安装 node
+        if: ${{ env.SKIP_PREVIEW != 'true' && env.ONLY_DOCS == 'true' }}
         uses: pnpm/action-setup@v3
         with:
           version: 9
-          # Remove the cache option since we don't have a lock file yet
-          # cache: npm
 
       - name: 安装支持库
-        if: ${{ env.ONLY_DOCS == 'true' }}
+        if: ${{ env.SKIP_PREVIEW != 'true' && env.ONLY_DOCS == 'true' }}
         run: pnpm install --frozen-lockfile
 
       - name: 构建页面
-        if: ${{ env.ONLY_DOCS == 'true' }}
+        if: ${{ env.SKIP_PREVIEW != 'true' && env.ONLY_DOCS == 'true' }}
         run: pnpm run docs:build
 
       - name: 上传到 Cloudflare Pages
