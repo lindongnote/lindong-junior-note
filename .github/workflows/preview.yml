@@ -36,9 +36,14 @@ jobs:
           # 检查是否有文件重命名、删除或添加操作
           FILE_STATUS=$(git diff --name-status origin/${{ github.event.pull_request.base.ref }}...HEAD)
           
-          # 检查 docs/ 目录下的文件操作
-          DOCS_CHANGES=$(echo "$FILE_STATUS" | grep "^.*docs/" || true)
-          RENAME_DELETE_ADD=$(echo "$DOCS_CHANGES" | grep -E "^[RDA]" || true)
+          echo "File status:"
+          echo "$FILE_STATUS"
+          
+          # 直接检查 docs/ 目录下的文件变更类型
+          DOCS_OPERATIONS=$(echo "$FILE_STATUS" | grep -E "^[RDA]\s+docs/" || true)
+          
+          echo "Docs operations:"
+          echo "$DOCS_OPERATIONS"
           
           # 获取修改的 md 文件列表
           MD_FILES=$(echo "$CHANGED_FILES" | grep '^docs/.*\.md$' || true)
@@ -61,8 +66,8 @@ jobs:
             if [[ "$IS_FIRST_PUSH" == "true" ]]; then
               echo "First push, will comment with all links"
               echo "NEED_COMMENT=true" >> $GITHUB_ENV
-            elif [[ -n "$RENAME_DELETE_ADD" ]]; then
-              echo "Found file operations, will comment with all links"
+            elif [[ -n "$DOCS_OPERATIONS" ]]; then
+              echo "Found file operations in docs/, will comment"
               echo "NEED_COMMENT=true" >> $GITHUB_ENV
             else
               echo "Regular content update, skipping comment"
