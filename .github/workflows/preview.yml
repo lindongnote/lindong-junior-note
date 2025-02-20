@@ -30,6 +30,9 @@ jobs:
         id: check-changes
         run: |
           CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
+          # 检查是否是首次推送
+          IS_FIRST_PUSH=$(if [[ "${{ github.event.action }}" == "opened" ]]; then echo "true"; else echo "false"; fi)
+          
           # 检查是否有文件重命名、删除或添加操作
           FILE_STATUS=$(git diff --name-status origin/${{ github.event.pull_request.base.ref }}...HEAD)
           RENAME_DELETE_ADD=$(echo "$FILE_STATUS" | grep -E '^[RDA]' || true)
@@ -52,12 +55,12 @@ jobs:
           if echo "$CHANGED_FILES" | grep -q "^docs/"; then
             echo "Only 'docs' folder changes detected."
             echo "ONLY_DOCS=true" >> $GITHUB_ENV
-            # 如果有重命名、删除或添加操作，设置需要评论
-            if [[ -n "$RENAME_DELETE_ADD" ]]; then
-              echo "Found rename/delete/add operations."
+            # 如果是首次推送或有重命名、删除、添加操作，设置需要评论
+            if [[ "$IS_FIRST_PUSH" == "true" ]] || [[ -n "$RENAME_DELETE_ADD" ]]; then
+              echo "First push or found rename/delete/add operations."
               echo "NEED_COMMENT=true" >> $GITHUB_ENV
             else
-              echo "No rename/delete/add operations."
+              echo "Not first push and no rename/delete/add operations."
               echo "NEED_COMMENT=false" >> $GITHUB_ENV
             fi
           else
