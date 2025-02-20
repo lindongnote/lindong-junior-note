@@ -137,7 +137,7 @@ jobs:
           echo "PREVIEW_URL=$PREVIEW_URL" >> $GITHUB_ENV
 
       - name: 评论 PR 预览链接
-        if: ${{ env.ONLY_DOCS == 'true' && env.NEED_COMMENT == 'true' }}
+        if: ${{ env.ONLY_DOCS == 'true' && env.SKIP_COMMENT != 'true' }}
         uses: actions/github-script@v6
         with:
           github-token: ${{ steps.auth.outputs.token }}
