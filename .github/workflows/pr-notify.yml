@@ -16,7 +16,7 @@ jobs:
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: "【LindongNote】新的 PR 请求 #${{ github.event.pull_request.number }}"
-          to: ${{ vars.TEAM_EMAILS }}
+          to: ${{ secrets.TEAM_EMAILS }}
           from: ${{ secrets.MAIL_USERNAME }}
           body: |
             有新的 PR 需要审核：
